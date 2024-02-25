@@ -20,7 +20,7 @@ class Ball{
     int g=10; // gravity=10 sue me!!
     int pos[2]; //temporary position variable ig
     int theta =0;
-
+    int R=4;  // rayant 
 
     float get_angle(){
       mpu.update();
@@ -28,37 +28,37 @@ class Ball{
       return theta;
     }
     void velocity(){
-      theta= (get_angle()+90)*3.14159/180;
+      theta= (get_angle()-90)*3.14159/180;
       Vel[1]= static_cast<int>(M*g*sin(theta));
       Vel[0]= static_cast<int>(M*g*cos(theta));
     }
 
     void pos_update(){
-      if (pos[1]<4){
-        pos[1]=4;
+      if (pos[1]<(0+R)){
+        pos[1]=0+R;
       }
-      if (pos[1]>60){
-        pos[1]=60;
+      if (pos[1]>(64-R)){
+        pos[1]=(64-R);
       }
-      if (pos[0]<4){
-        pos[0]=4;
+      if (pos[0]<(0+R)){
+        pos[0]=0+R;
       }
-      if (pos[0]>124){
-        pos[0]=124;
+      if (pos[0]>(128-R)){
+        pos[0]=128-R;
       }
       pos[0]+=Vel[0];
       pos[1]+=Vel[1];
     }
 
     void create_ball(){
-      display.clearDisplay();
+      
     
       velocity();
       pos_update();
       
-      display.fillCircle(pos[0],pos[1],4,1);
+      display.fillCircle(pos[0],pos[1],R,1);
       
-      display.display();
+      
       
     }
 };
@@ -111,6 +111,10 @@ void setup() {
 
   ball2.pos[0]=10;
   ball2.pos[1]=25;
+  ball1.M=1;
+  ball2.M= 0.8;
+  ball1.R=5;
+  ball3.R=3;
 }
 
 // float get_angle(){
@@ -142,9 +146,9 @@ void setup() {
 // }
 void loop() {
   
+  
 
-
-  // display.clearDisplay();
+  display.clearDisplay();
   
   // velocity();
   // pos_update();
@@ -156,6 +160,6 @@ void loop() {
   ball1.create_ball();
   ball2.create_ball();
   ball3.create_ball();
-  
+  display.display();
 
 }
