@@ -21,6 +21,8 @@ class Ball{
     int pos[2]; //temporary position variable ig
     int theta =0;
     int R=4;  // rayant 
+    float col_x = 0; // check for collision
+    float col_y = 0;
 
     float get_angle(){
       mpu.update();
@@ -32,7 +34,23 @@ class Ball{
       Vel[1]= static_cast<int>(M*g*sin(theta));
       Vel[0]= static_cast<int>(M*g*cos(theta));
     }
+    void check_collision(){
+      for(int n=(pos[0]-(R+1));n<= (pos[0]+(R+1));n++){
+        for(int k=(pos[1]-(R+1));k<= (pos[1]+(R+1));k++){
+          if ( (n-pos[0])^2+(k-pos[1])^2==(R+1)^2){  //generate an octogonal hitmap
+            if(display.getPixel(n,k)==true){    // check the hitmap
+              // get the collision deirection
+              col_x=n-pos[0];           
+              col_y=k-pos[1];
+            }
+          }
+          // if((n<(pos[0]-R)||n>(pos[0]+R))&&(k<(pos[1]-R)||k>(pos[1]+R))){
+          //   col=display.getPixel(n,k);
+          // }
+        }
+      }
 
+    }
     void pos_update(){
       if (pos[1]<(0+R)){
         pos[1]=0+R;
@@ -46,8 +64,10 @@ class Ball{
       if (pos[0]>(128-R)){
         pos[0]=128-R;
       }
-      pos[0]+=Vel[0];
-      pos[1]+=Vel[1];
+      // update the position
+      // position = current position + gravity + colision
+      pos[0]+=Vel[0]+col_x*.2;  
+      pos[1]+=Vel[1]+col_y*.2;
     }
 
     void create_ball(){
